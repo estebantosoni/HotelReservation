@@ -2,6 +2,7 @@
 using MagicVilla_VillaMVC.Models;
 using MagicVilla_VillaMVC.Services.IServices;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Serialization;
 using Utility;
@@ -59,6 +60,13 @@ namespace MagicVilla_VillaMVC.Services
 
                 //create response message for receive API response
                 HttpResponseMessage responseMessage = null;
+
+                //we pass the token to the header on the request
+                if (!string.IsNullOrEmpty(request.Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", request.Token);
+                }
+
                 //send a message to API
                 responseMessage = await client.SendAsync(message);
                 //convert response in a correct format to be able to read it

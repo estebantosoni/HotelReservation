@@ -5,6 +5,7 @@ using MagicVilla_VillaMVC.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using Utility;
 
 namespace MagicVilla_VillaMVC.Controllers
 {
@@ -23,7 +24,9 @@ namespace MagicVilla_VillaMVC.Controllers
         {
             List<VillaDTO> list = new();
 
-            var response = await _villaService.GetAllAsync<APIResponse>();
+            //in the web project we need to pass the token that is stored in Session to all methods
+            //that is needed because we pass the token in all methods on the service class
+            var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
 
             if (response != null && response.IsSuccess)
             {
