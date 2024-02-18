@@ -1,10 +1,9 @@
-﻿namespace MagicVilla_VillaMVC.Models.DTO
+﻿namespace MagicVilla_VillaAPI.Models.DTO
 {
     public class UserDTO
     {
-        public string Id { get; set; }
+        public string ID { get; set; }
         public string Name { get; set; }
-        public string Password { get; set; }
         public string UserName { get; set; }
 
     }

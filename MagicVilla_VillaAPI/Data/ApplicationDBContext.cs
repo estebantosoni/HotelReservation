@@ -1,10 +1,12 @@
 ﻿using MagicVilla_VillaAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace MagicVilla_VillaAPI.Data
 {
-    public class ApplicationDBContext : DbContext
+    //add identity (register, login) to context (replace DbContext)
+    public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) {
             
@@ -13,10 +15,12 @@ namespace MagicVilla_VillaAPI.Data
         public DbSet<Villa> Villas { get; set; }
         public DbSet<VillaNumber> VillaNumbers { get; set; }
         public DbSet<LocalUser> LocalUsers { get; set; }
-
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //neccesary to avoid a problem related to keys when we are migrating data after set Identity
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Villa>().HasData(
 

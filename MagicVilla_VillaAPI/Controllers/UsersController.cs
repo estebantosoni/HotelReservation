@@ -5,7 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
-    [Route("api/UsersAuth")]
+    [Route("api/v{version:apiVersion}/UsersAuth")]
+    //lets assume that the logic of this controller doesnt change
+    //in that case it will remain like a neutral version, without changes
+    //this controller will display in both versions
+    [ApiVersionNeutral]
     [ApiController]
     public class UsersController : Controller
     {
@@ -28,7 +32,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 apiResponse.IsSuccess = false;
                 apiResponse.ErrorMessages.Add("Username or password is incorrect");
                 return BadRequest(apiResponse);
-                
+
             }
             apiResponse.StatusCode = System.Net.HttpStatusCode.OK;
             apiResponse.IsSuccess = true;
@@ -40,7 +44,7 @@ namespace MagicVilla_VillaAPI.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequestDTO model)
         {
             bool ifUserNameUnique = _userRepository.IsUniqueUser(model.UserName);
-            if(!ifUserNameUnique)
+            if (!ifUserNameUnique)
             {
                 apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 apiResponse.IsSuccess = false;
@@ -49,8 +53,8 @@ namespace MagicVilla_VillaAPI.Controllers
             }
 
             var user = await _userRepository.Register(model);
-            
-            if(user == null)
+
+            if (user == null)
             {
                 apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 apiResponse.IsSuccess = false;

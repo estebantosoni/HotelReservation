@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Utility;
 
@@ -36,12 +37,16 @@ namespace MagicVilla_VillaMVC.Controllers
             {
                 LoginResponseDTO model = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(response.Result));
 
+                //extract role from token
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(model.Token);
+
                 //is needed to tell to HttpContext that a user was logged
                 //with this the user can manipulate the crud operations
                 //first, we define the rules
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 identity.AddClaim(new Claim(ClaimTypes.Name, model.User.UserName));
-                identity.AddClaim(new Claim(ClaimTypes.Role, model.User.Role));
+                identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u=>u.Type == "role").Value));
 
                 //then, we pass the rules to a principal and we specify the scheme defined in Program.cs
                 var principal = new ClaimsPrincipal(identity);

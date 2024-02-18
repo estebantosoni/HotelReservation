@@ -2,6 +2,7 @@ using MagicVilla_VillaMVC;
 using MagicVilla_VillaMVC.Services;
 using MagicVilla_VillaMVC.Services.IServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,11 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(100);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+});
+//add routing to allow the wep app to find the current version of api
+builder.Services.AddRouting(options =>
+{
+    options.ConstraintMap.Add("apiVersion", typeof(ApiVersionRouteConstraint));
 });
 
 var app = builder.Build();
